@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:personal_health_tracker/presention/screens/home/home_page.dart';
+import 'package:personal_health_tracker/routes/app_router.dart';
 
-
-void main() => runApp(const MyApp(),);
-
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp ({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-      
+    return MaterialApp.router(
+      routerConfig: router,
+      title: 'Personal Health Tracker',
     );
-  
   }
 }

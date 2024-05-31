@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:personal_health_tracker/presention/screens/auth/bloc/auth_bloc.dart';
-import 'package:personal_health_tracker/presention/screens/auth/login_page.dart';
 import 'package:personal_health_tracker/presention/widgets/text_field.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -40,13 +40,10 @@ class _SignUpPageState extends State<SignUpPage> {
         }
         if (state is SignUpSuccessState) {
           print(state);
-          Navigator.pushReplacementNamed(context, 'home');
+          context.go('/');
         }
         if (state is SignupNavigateToLoginState) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
-          );
+          context.go('/login');
         }
       },
       builder: (context, state) {

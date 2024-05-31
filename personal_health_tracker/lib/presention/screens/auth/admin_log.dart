@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:personal_health_tracker/presention/screens/auth/bloc/auth_bloc.dart';
-import 'package:personal_health_tracker/presention/screens/auth/signup_page.dart';
 import 'package:personal_health_tracker/presention/widgets/text_field.dart';
 
 class AdminLogPage extends StatefulWidget {
@@ -13,13 +13,8 @@ class AdminLogPage extends StatefulWidget {
 
 class _AdminLogPageState extends State<AdminLogPage> {
   final AuthBloc authBloc = AuthBloc();
-  // text editing controllers
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
-
-  // sign user in method
-  void signAdminIn() {}
 
   @override
   Widget build(BuildContext context) {
@@ -28,23 +23,13 @@ class _AdminLogPageState extends State<AdminLogPage> {
       buildWhen: (previous, current) => current is! AuthActionState,
       listener: (context, state) {
         if (state is AdminLogErrorState) {
-          final snackBar = SnackBar(
-            content: Text(state.error),
-          );
+          final snackBar = SnackBar(content: Text(state.error));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        } else if (state is AdminLogSuccessState) {
+          context.go('/');
+        } else if (state is AdminLogNavigateToSignupState) {
+          context.go('/signup');
         }
-        else if (state is AdminLogSuccessState) {
-          print(state);
-          Navigator.pushReplacementNamed(context, 'home');
-        }
-        else if (state is AdminLogNavigateToSignupState) {
-           Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SignUpPage()),
-          );
-        }
-        
-
       },
       builder: (context, state) {
         return Scaffold(
@@ -73,21 +58,12 @@ class _AdminLogPageState extends State<AdminLogPage> {
                 height: 500.0,
                 child: Column(
                   children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    //curcle or avator logo
+                    const SizedBox(height: 20),
                     const CircleAvatar(
-                      // backgroundColor: Colors.white,
                       backgroundImage: AssetImage("image/logo.png"),
                       radius: 30,
                     ),
-
-                    const SizedBox(
-                      height: 15,
-                    ),
-
-                    //text
+                    const SizedBox(height: 15),
                     const Text(
                       "ጎመን በጤና",
                       style: TextStyle(
@@ -95,41 +71,28 @@ class _AdminLogPageState extends State<AdminLogPage> {
                           fontSize: 16,
                           color: Color.fromARGB(255, 72, 71, 71)),
                     ),
-
-                    const SizedBox(
-                      height: 50,
-                    ),
-
-                    //email text field
+                    const SizedBox(height: 50),
                     MyTextField(
-                        controller: emailController,
-                        hintText: "Email",
-                        obscureText: false),
-                    const SizedBox(
-                      height: 10,
+                      controller: emailController,
+                      hintText: "Email",
+                      obscureText: false,
                     ),
-                    //password textfeild
+                    const SizedBox(height: 10),
                     MyTextField(
-                        controller: passwordController,
-                        hintText: "Password",
-                        obscureText: true),
-                    const SizedBox(
-                      height: 50,
+                      controller: passwordController,
+                      hintText: "Password",
+                      obscureText: true,
                     ),
-                    // sing up btn
-                   ElevatedButton(
-                              onPressed: () {
-                                // Submit button logic
-                                authBloc.add(AdminLogEvent(
-                                      useremail: emailController.text,
-                                      password: passwordController.text));
-                                },
-                              child: const Text('Login as Admin'),
-                            ),
-                    const SizedBox(
-                      height: 10,
+                    const SizedBox(height: 50),
+                    ElevatedButton(
+                      onPressed: () {
+                        authBloc.add(AdminLogEvent(
+                            useremail: emailController.text,
+                            password: passwordController.text));
+                      },
+                      child: const Text('Login as Admin'),
                     ),
-                    // textfelid for login link
+                    const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -154,7 +117,6 @@ class _AdminLogPageState extends State<AdminLogPage> {
                         )
                       ],
                     )
-
                   ],
                 ),
               ),

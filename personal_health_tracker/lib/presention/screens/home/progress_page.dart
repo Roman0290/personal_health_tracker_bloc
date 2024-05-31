@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class HealthTrackerPage extends StatelessWidget {
@@ -37,6 +38,12 @@ class HealthTrackerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            GoRouter.of(context).go('/');
+          },
+        ),
         title: Text('Health Tracker'),
       ),
       body: Padding(

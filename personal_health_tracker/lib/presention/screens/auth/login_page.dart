@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:personal_health_tracker/presention/screens/auth/bloc/auth_bloc.dart';
-import 'package:personal_health_tracker/presention/screens/auth/signup_page.dart';
 import 'package:personal_health_tracker/presention/widgets/my_button.dart';
 import 'package:personal_health_tracker/presention/widgets/text_field.dart';
 
@@ -41,13 +41,10 @@ class _LoginPageState extends State<LoginPage> {
         }
         if (state is LogInSuccessState) {
           print(state);
-          Navigator.pushReplacementNamed(context, 'home');
+          context.go('/');
         }
         if (state is LoginNavigateToSignupState) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SignUpPage()),
-          );;
+          context.go('/signup');
         }
       },
       builder: (context, state) {
@@ -126,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
-                              "Already have an account? ",
+                              "Don't have an account. ",
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Color.fromARGB(255, 133, 95, 176),
@@ -137,10 +134,10 @@ class _LoginPageState extends State<LoginPage> {
                                 authBloc.add(NavigateToSignUpPageEvent());
                               },
                               child:const Text(
-                                "Login",
+                                "Sign up",
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: Color.fromARGB(255, 133, 95, 176),
+                                  color: Color.fromARGB(255, 127, 85, 175),
                                 ),
                               ),
                             ),

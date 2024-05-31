@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:personal_health_tracker/presention/screens/home/bloc/home_bloc.dart';
-import 'package:personal_health_tracker/presention/screens/home/data_table.dart';
-import 'package:personal_health_tracker/presention/screens/home/progress_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -21,21 +20,11 @@ class _HomePageState extends State<HomePage> {
       buildWhen: (previous, current) => current is! HomeActionState,
 
       listener: (context, state) {
-        // TODO: implement listener
-        // if(state is HomeHealthDataSubmitted){
-        //   print("health data is submitted successfully");
-        // }
-        if (state is HomeNavigateToDataTablePageActionState){
-          Navigator.push(
-            ViewDataTableRequested(context).context,
-            MaterialPageRoute(builder: (context) => DataTablePage()),
-          );
-        }
-        else if(state is HomeNavigateToProgressChartPageActionState){
-          Navigator.push(
-            ViewProgressChartRequested(context).context,
-            MaterialPageRoute(builder: (context) => HealthTrackerPage.withSampleData()),
-          );
+       
+       if (state is HomeNavigateToDataTablePageActionState) {
+          context.go('/data-table');
+        } else if (state is HomeNavigateToProgressChartPageActionState) {
+          context.go('/progress-chart');
         }
       },
       builder: (context, state) {
