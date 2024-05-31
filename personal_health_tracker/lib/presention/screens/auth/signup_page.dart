@@ -20,9 +20,15 @@ class _SignUpPageState extends State<SignUpPage> {
   final emailController =TextEditingController();
 
   final passwordController =TextEditingController();
-  
 
-  void signUserIn(){}
+  @override
+  void dispose() {
+    usernameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    authBloc.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

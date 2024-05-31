@@ -44,7 +44,7 @@ class HealthTrackerPage extends StatelessWidget {
             GoRouter.of(context).go('/');
           },
         ),
-        title: Text('Health Tracker'),
+        title: const Text('Health Tracker'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

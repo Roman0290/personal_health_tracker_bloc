@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:personal_health_tracker/presention/screens/auth/bloc/auth_bloc.dart';
-import 'package:personal_health_tracker/presention/widgets/my_button.dart';
 import 'package:personal_health_tracker/presention/widgets/text_field.dart';
 
 class LoginPage extends StatefulWidget {
@@ -21,6 +20,15 @@ class _LoginPageState extends State<LoginPage> {
 
   final passwordController =TextEditingController();
 
+   @override
+  void dispose() {
+    // Clean up the controllers when the widget is disposed.
+    emailController.dispose();
+    passwordController .dispose();
+    authBloc.close();
+    super.dispose();
+  }
+
   // sign user in method
   void signUserIn(){}
 
@@ -33,18 +41,19 @@ class _LoginPageState extends State<LoginPage> {
       
       listener: (context, state) {
         // TODO: implement listener
-        if (state is LogInErrorState) {
-          final snackBar = SnackBar(
-            content: Text(state.error),
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
+        
         if (state is LogInSuccessState) {
           print(state);
           context.go('/');
         }
-        if (state is LoginNavigateToSignupState) {
+        else if (state is LoginNavigateToSignupState) {
           context.go('/signup');
+        }
+        else if (state is LogInErrorState) {
+          final snackBar = SnackBar(
+            content: Text(state.error),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       },
       builder: (context, state) {
@@ -112,10 +121,13 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     SizedBox(height: 50,),
                     // sing up btn
-                    MyButton(
-                      onTap: signUserIn,
-                      buttonText: "Log in",
-    
+                    ElevatedButton(
+                      onPressed: () {
+                        authBloc.add(LogInEvent(
+                            useremail: emailController.text,
+                            password: passwordController.text));
+                      },
+                      child: const Text('Login'),
                     ),
                     SizedBox(height: 10,),
                     // textfelid for login link  

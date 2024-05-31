@@ -11,7 +11,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<NavigateToSignUpPageEvent>(signUpEvent);
     on<AdminLogNavigateToSignUpPageEvent>(navigateToSignUpPageEvent);
-    
+
     on<LogInEvent>(logInEvent);
     on<NavigateToLoginPageEvent>(navigateToLoginEvent);
     on<SignupUserEvent>(signupUserEvent);
@@ -22,12 +22,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       NavigateToSignUpPageEvent event, Emitter<AuthState> emit) {
     emit(LoginNavigateToSignupState());
   }
+
   FutureOr<void> navigateToSignUpPageEvent(
       AdminLogNavigateToSignUpPageEvent event, Emitter<AuthState> emit) {
     emit(AdminLogNavigateToSignupState());
   }
 
   FutureOr<void> logInEvent(LogInEvent event, Emitter<AuthState> emit) async {
+    emit(LoginLoadingState());
+    await Future.delayed(Duration(seconds: 3));
+
     String uri = 'http://localhost:3000/auth/login';
     final url = Uri.parse(uri);
 
@@ -62,9 +66,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(SignupNavigateToLoginState());
   }
 
-
   FutureOr<void> signupUserEvent(
       SignupUserEvent event, Emitter<AuthState> emit) async {
+    emit(SignupLoadingState());
+    await Future.delayed(Duration(seconds: 3));
+
     String uri = 'http://localhost:3000/auth/signup';
     final url = Uri.parse(uri);
     final body = {
@@ -97,11 +103,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  
+  FutureOr<void> adminLogEvent(
+      AdminLogEvent event, Emitter<AuthState> emit) async {
+    emit(AdminLogLoadingState());
+    await Future.delayed(Duration(seconds: 3));
 
-  
-
-  FutureOr<void> adminLogEvent(AdminLogEvent event, Emitter<AuthState> emit) async {
     String uri = 'http://localhost:3000/auth/login';
     final url = Uri.parse(uri);
 

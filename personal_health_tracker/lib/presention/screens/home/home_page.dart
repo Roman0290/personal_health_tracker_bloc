@@ -10,21 +10,42 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final HomeBloc homeBloc = HomeBloc();
+
+  final TextEditingController foodTypeController = TextEditingController();
+  final TextEditingController caloriesAmountController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController heightController = TextEditingController();
+  final TextEditingController exerciseController = TextEditingController();
+  final TextEditingController waterIntakeController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controllers when the widget is disposed.
+    foodTypeController.dispose();
+    caloriesAmountController.dispose();
+    weightController.dispose();
+    heightController.dispose();
+    exerciseController.dispose();
+    waterIntakeController.dispose();
+    homeBloc.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeBloc, HomeState>(
       bloc: homeBloc,
-
       listenWhen: (previous, current) => current is HomeActionState,
-
       buildWhen: (previous, current) => current is! HomeActionState,
-
       listener: (context, state) {
-       
-       if (state is HomeNavigateToDataTablePageActionState) {
+        if (state is HomeNavigateToDataTablePageActionState) {
           context.go('/data-table');
         } else if (state is HomeNavigateToProgressChartPageActionState) {
           context.go('/progress-chart');
+        } else if (state is HomeHealthDataSubmittedState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Health data submitted successfully')),
+          );
         }
       },
       builder: (context, state) {
@@ -61,6 +82,7 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           children: [
                             TextFormField(
+                              controller: foodTypeController,
                               decoration: const InputDecoration(
                                 labelText: 'Calories Amount',
                               ),
@@ -73,6 +95,7 @@ class _HomePageState extends State<HomePage> {
                               },
                             ),
                             TextFormField(
+                              controller: caloriesAmountController,
                               decoration: const InputDecoration(
                                 labelText: 'Food Type',
                               ),
@@ -85,6 +108,7 @@ class _HomePageState extends State<HomePage> {
                               },
                             ),
                             TextFormField(
+                              controller: weightController,
                               decoration: const InputDecoration(
                                 labelText: 'Weight',
                               ),
@@ -97,6 +121,7 @@ class _HomePageState extends State<HomePage> {
                               },
                             ),
                             TextFormField(
+                              controller: heightController,
                               decoration: const InputDecoration(
                                 labelText: 'Height',
                               ),
@@ -109,6 +134,7 @@ class _HomePageState extends State<HomePage> {
                               },
                             ),
                             TextFormField(
+                              controller: exerciseController,
                               decoration: const InputDecoration(
                                 labelText: 'Minutes of Exercise',
                               ),
@@ -121,6 +147,7 @@ class _HomePageState extends State<HomePage> {
                               },
                             ),
                             TextFormField(
+                              controller: waterIntakeController,
                               decoration: const InputDecoration(
                                 labelText: 'Amount of Water Taken (in liters)',
                               ),
@@ -135,8 +162,14 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(height: 16.0),
                             ElevatedButton(
                               onPressed: () {
-                                // Submit button logic
-
+                                homeBloc.add(HomeSubmitButtonClicked(
+                                  foodType: foodTypeController.text,
+                                  caloriesAmount: int.parse(caloriesAmountController.text),
+                                  weight: double.parse(weightController.text),
+                                  height: double.parse(heightController.text),
+                                  minutesOfExercise: int.parse(exerciseController.text),
+                                  waterIntake: double.parse(waterIntakeController.text),
+                                ));
                               },
                               child: const Text('Submit'),
                             ),
@@ -148,13 +181,13 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
-                      homeBloc.add(ViewDataTableRequested(this.context));
+                      homeBloc.add(ViewDataTableRequested(context));
                     },
                     child: const Text('View Data Table'),
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      homeBloc.add(ViewProgressChartRequested(this.context));
+                      homeBloc.add(ViewProgressChartRequested(context));
                     },
                     child: const Text('View Progress Chart'),
                   ),

@@ -5,8 +5,6 @@ import 'package:personal_health_tracker/presention/screens/auth/bloc/auth_bloc.d
 import 'package:personal_health_tracker/presention/widgets/text_field.dart';
 
 class AdminLogPage extends StatefulWidget {
-  final AuthBloc adminBloc = AuthBloc();
-
   @override
   State<AdminLogPage> createState() => _AdminLogPageState();
 }
@@ -17,8 +15,17 @@ class _AdminLogPageState extends State<AdminLogPage> {
   final passwordController = TextEditingController();
 
   @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    authBloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthBloc, AuthState>(
+      bloc: authBloc,
       listenWhen: (previous, current) => current is AuthActionState,
       buildWhen: (previous, current) => current is! AuthActionState,
       listener: (context, state) {
@@ -27,6 +34,10 @@ class _AdminLogPageState extends State<AdminLogPage> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } else if (state is AdminLogSuccessState) {
           context.go('/');
+        } else if (state is AdminLogLoadingState) {
+          Future.delayed(Duration(seconds: 3), () {
+            context.go('/');
+          });
         } else if (state is AdminLogNavigateToSignupState) {
           context.go('/signup');
         }
@@ -87,8 +98,9 @@ class _AdminLogPageState extends State<AdminLogPage> {
                     ElevatedButton(
                       onPressed: () {
                         authBloc.add(AdminLogEvent(
-                            useremail: emailController.text,
-                            password: passwordController.text));
+                          useremail: emailController.text,
+                          password: passwordController.text,
+                        ));
                       },
                       child: const Text('Login as Admin'),
                     ),

@@ -1,4 +1,3 @@
-
 part of 'auth_bloc.dart';
 
 @immutable
@@ -14,10 +13,27 @@ class AdminLogNavigateToSignupState extends AuthActionState {}
 
 class SignupNavigateToLoginState extends AuthActionState {}
 
+// loding states
+class LoginLoadingState extends AuthActionState{}
+
+class AdminLogLoadingState extends AuthActionState {}
+
+class SignupLoadingState extends AuthActionState{}
+
+
+//Success tates
+
 class LogInSuccessState extends AuthActionState {}
 
 class AdminLogSuccessState extends AuthActionState {}
 
+class SignUpSuccessState extends AuthActionState {}
+//error states
+
+class SignupError extends AuthActionState {
+  final String error;
+  SignupError({required this.error});
+}
 
 class LogInErrorState extends AuthActionState {
   final String error;
@@ -28,13 +44,3 @@ class AdminLogErrorState extends AuthActionState {
   final String error;
   AdminLogErrorState({required this.error});
 }
-
-
-class SignUpSuccessState extends AuthActionState {}
-
-class SignupError extends AuthActionState {
-  final String error;
-  SignupError({required this.error});
-}
-
-
