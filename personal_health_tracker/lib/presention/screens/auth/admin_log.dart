@@ -34,10 +34,6 @@ class _AdminLogPageState extends State<AdminLogPage> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } else if (state is AdminLogSuccessState) {
           context.go('/');
-        } else if (state is AdminLogLoadingState) {
-          Future.delayed(Duration(seconds: 3), () {
-            context.go('/');
-          });
         } else if (state is AdminLogNavigateToSignupState) {
           context.go('/signup');
         }
