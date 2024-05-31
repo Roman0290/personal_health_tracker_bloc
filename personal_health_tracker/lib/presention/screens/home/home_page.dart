@@ -9,7 +9,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final HomeBloc homeBloc = HomeBloc();
+ 
 
   final TextEditingController foodTypeController = TextEditingController();
   final TextEditingController caloriesAmountController = TextEditingController();
@@ -27,12 +27,12 @@ class _HomePageState extends State<HomePage> {
     heightController.dispose();
     exerciseController.dispose();
     waterIntakeController.dispose();
-    homeBloc.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+     final HomeBloc homeBloc = BlocProvider.of<HomeBloc>(context);
     return BlocConsumer<HomeBloc, HomeState>(
       bloc: homeBloc,
       listenWhen: (previous, current) => current is HomeActionState,
@@ -43,10 +43,10 @@ class _HomePageState extends State<HomePage> {
         } else if (state is HomeNavigateToProgressChartPageActionState) {
           context.go('/progress-chart');
         } else if (state is HomeHealthDataSubmittedState) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Health data submitted successfully')),
-          );
-        }
+          context.go('/data-table');
+          
+  }
+        
       },
       builder: (context, state) {
         return Scaffold(
@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           children: [
                             TextFormField(
-                              controller: foodTypeController,
+                              controller: caloriesAmountController,
                               decoration: const InputDecoration(
                                 labelText: 'Calories Amount',
                               ),
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                               },
                             ),
                             TextFormField(
-                              controller: caloriesAmountController,
+                              controller: foodTypeController,
                               decoration: const InputDecoration(
                                 labelText: 'Food Type',
                               ),
@@ -162,6 +162,7 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(height: 16.0),
                             ElevatedButton(
                               onPressed: () {
+                                print("submitted");
                                 homeBloc.add(HomeSubmitButtonClicked(
                                   foodType: foodTypeController.text,
                                   caloriesAmount: int.parse(caloriesAmountController.text),

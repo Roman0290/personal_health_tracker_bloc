@@ -9,7 +9,7 @@ import 'package:personal_health_tracker/presention/screens/home/progress_page.da
 final GoRouter router = GoRouter(
   routes: [
     GoRoute(
-      path: '/',
+      path: '/home',
       builder: (context, state) => HomePage(),
     ),
     GoRoute(
@@ -17,7 +17,7 @@ final GoRouter router = GoRouter(
       builder: (context, state) => SignUpPage(),
     ),
     GoRoute(
-      path: '/login',
+      path: '/',
       builder: (context, state) => LoginPage(),
     ),
     GoRoute(

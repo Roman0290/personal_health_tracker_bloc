@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'package:personal_health_tracker/local_storage/secure_storage.dart';
+import 'package:personal_health_tracker/presention/screens/auth/repository/auth_repository.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
 
@@ -32,32 +33,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(LoginLoadingState());
     await Future.delayed(Duration(seconds: 3));
 
-    String uri = 'http://localhost:3000/auth/login';
-    final url = Uri.parse(uri);
-
-    final body = {"username": event.useremail, "password": event.password};
-    final jsonBody = jsonEncode(body);
-    final headers = {"Content-Type": "application/json"};
-
-    final res = await http.post(url, headers: headers, body: jsonBody);
-    Map response = jsonDecode(res.body);
-    print(response);
-    if (response.containsKey('message')) {
-      var error = response["message"];
-
-      if (error is! String) {
-        error = error[0];
-      }
-      emit(LogInErrorState(error: error));
-    } else {
-      final secureStorage = SecureStorage().secureStorage;
-
-      await secureStorage.write(key: "role", value: response["role"]);
-      await secureStorage.write(key: "token", value: response["accessToken"]);
-      await secureStorage.write(key: "username", value: response["username"]);
-      await secureStorage.write(key: "email", value: response["email"]);
-
-      emit(LogInSuccessState());
+    final loggedin = await AuthRepository.login(event);
+    if (loggedin == "success"){
+       emit(LogInSuccessState());
+    }
+      else {
+       
+      emit(LogInErrorState(error: loggedin));
     }
   }
 
@@ -84,8 +66,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     final res = await http.post(url, headers: headers, body: jsonBody);
     Map response = jsonDecode(res.body);
-    print(response);
+    // print(response);
     if (res.statusCode != 201) {
+      print(response);
       var error = response["message"];
 
       if (error is! String) {
@@ -94,11 +77,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(SignupError(error: error));
     } else {
       final secureStorage = SecureStorage().secureStorage;
-      await secureStorage.write(key: "role", value: response["role"]);
-      await secureStorage.write(key: "token", value: response["accessToken"]);
-      await secureStorage.write(key: "username", value: response["username"]);
-      await secureStorage.write(key: "email", value: response["email"]);
-
+      await secureStorage.write(key: "token", value: response["token"]);
+  
       emit(SignUpSuccessState());
     }
   }
@@ -111,15 +91,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     String uri = 'http://localhost:3000/auth/login';
     final url = Uri.parse(uri);
 
-    final body = {"username": event.useremail, "password": event.password};
+    final body = {"email": event.useremail, "password": event.password};
     final jsonBody = jsonEncode(body);
     final headers = {"Content-Type": "application/json"};
 
     final res = await http.post(url, headers: headers, body: jsonBody);
     Map response = jsonDecode(res.body);
     print(response);
-    if (response.containsKey('message')) {
-      var error = response["message"];
+    if (response.containsKey('token')) {
+      var error = response["token"];
 
       if (error is! String) {
         error = error[0];
@@ -127,13 +107,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AdminLogErrorState(error: error));
     } else {
       final secureStorage = SecureStorage().secureStorage;
+      await secureStorage.write(key: "token", value: response["token"]);
 
-      await secureStorage.write(key: "role", value: response["role"]);
-      await secureStorage.write(key: "token", value: response["accessToken"]);
-      await secureStorage.write(key: "username", value: response["username"]);
-      await secureStorage.write(key: "email", value: response["email"]);
 
       emit(AdminLogSuccessState());
     }
   }
+
 }

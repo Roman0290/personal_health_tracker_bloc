@@ -43,8 +43,7 @@ class _LoginPageState extends State<LoginPage> {
         // TODO: implement listener
         
         if (state is LogInSuccessState) {
-          print(state);
-          context.go('/');
+          context.go('/home');
         }
         else if (state is LoginNavigateToSignupState) {
           context.go('/signup');

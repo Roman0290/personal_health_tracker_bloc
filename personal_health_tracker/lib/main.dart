@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:personal_health_tracker/presention/screens/home/bloc/home_bloc.dart';
 import 'package:personal_health_tracker/routes/app_router.dart';
 
 void main() {
-  runApp(MyApp());
+  
+  runApp(BlocProvider(create:(context)=> HomeBloc(),child: MyApp(),));
 }
 
 class MyApp extends StatelessWidget {

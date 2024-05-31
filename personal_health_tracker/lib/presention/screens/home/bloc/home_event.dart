@@ -35,5 +35,7 @@ class ViewProgressChartRequested extends HomeEvent {
   ViewProgressChartRequested(this.context);
 }
 
+class FetchDataTable extends HomeEvent{}
+
 
 

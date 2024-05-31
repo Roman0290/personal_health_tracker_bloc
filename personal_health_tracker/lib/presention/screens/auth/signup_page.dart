@@ -37,18 +37,20 @@ class _SignUpPageState extends State<SignUpPage> {
       listenWhen: (previous, current) => current is AuthActionState,
       buildWhen: (previous, current) => current is! AuthActionState,
       listener: (context, state) {
+      
         // TODO: implement listener
         if (state is SignupError) {
+         
           final snackBar = SnackBar(
             content: Text(state.error),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
-        if (state is SignUpSuccessState) {
+        else if (state is SignUpSuccessState) {
           print(state);
           context.go('/');
         }
-        if (state is SignupNavigateToLoginState) {
+        else if (state is SignupNavigateToLoginState) {
           context.go('/login');
         }
       },

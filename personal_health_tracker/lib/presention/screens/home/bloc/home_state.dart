@@ -16,3 +16,15 @@ class HomeHealthDataSubmittedState extends HomeActionState {}
 class HomeNavigateToDataTablePageActionState extends HomeActionState {}
 
 class HomeNavigateToProgressChartPageActionState extends HomeActionState {}
+
+class DataFetchSuccessState extends HomeState{
+  List data;
+  
+
+
+ DataFetchSuccessState({
+  required this.data,
+ 
+ });
+}
+
